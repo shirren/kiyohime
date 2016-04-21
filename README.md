@@ -2,7 +2,7 @@
 
 Kiyohime is a microservice framework written in Ruby. In Ruby microservices are traditionally written as RESTful services using established frameworks (e.g. Rails, Sinatra, Grape etc). At present there appears to be no elegant microservice framework for the Ruby language that works on a publish/subscribe model. Kiyohime is an attempt to fill this gap.
 
-**Please note that this library is not production ready, we will inform you once it is**.
+**Please note that this library is not production ready, we will inform you when it is**.
 
 ## Installation
 

@@ -4,13 +4,13 @@ require 'redis'
 module Kiyohime
   module Stores
     # A rudimentary abstraction of the store which will advance over time no doubt
-    class Redis
-      def create
+    class RedisStore
+      def store
         Redis.new
       end
 
-      def create_async
-        EM::Hiredis.connect.pubsub
+      def pubsub
+        EM::Hiredis
       end
     end
   end

@@ -4,22 +4,29 @@ module Kiyohime
   # A registry is a listing of services/functions which are accessible via a publish/subscribe paradigm. This
   # services/functions are accessible through the Publisher
   class Registry
-    attr_reader :name, :channel_parser, :store
+    attr_reader :name, :channel_parser, :store, :pubsub
 
     # A registry should be provided with a name
-    def initialize(name, store)
-      @name = name
-      @store = store
+    def initialize(name, store, pubsub)
+      @name, @store, @pubsub = name, store, pubsub
       @channel_parser = Kiyohime::Parsers::ChannelParser.new
-      subscribe_deregister
     end
 
-    # Asynchronous registration of services using the generic register functiob
+    # Non blocking registration of services. The run block creates an event loop, this allows
+    # the process to continue and service publications via registered subscribers
     def register_async(*services)
       EM.run do
-        # Convert the underlying store into one which supports evented calls
-        @store = store.create_async
+        @pubsub = pubsub.connect.pubsub
         services.each { |service| register(service) }
+        subscribe_deregister
+      end
+    end
+
+    # Asynchronous registration of deregistration
+    def deregister_async
+      EM.run do
+        @pubsub = pubsub.connect.pubsub
+        deregister
       end
     end
 
@@ -31,7 +38,7 @@ module Kiyohime
       unless store.keys.include?(channel)
         puts "Registering service: #{channel}"
         if service.respond_to?(:handle)
-          store.subscribe(channel) do |message|
+          pubsub.subscribe(channel) do |message|
             # This approach uses a generic approach, so the service should implement
             # a generic method named handle which takes a single argument
             service.handle(message)
@@ -52,13 +59,13 @@ module Kiyohime
       store.keys.include?(channel)
     end
 
-    # Asynchornous registration of multiple services via a service container. The service container
-    # defines the service and the methods on the service to register
+    # Non blocking registration of services. The run block creates an event loop, this allows
+    # the process to continue and service publications via registered subscribers
     def register_containers_async(*service_containers)
       EM.run do
-        # Convert the underlying store into one which supports evented calls
-        @store = store.create_async
+        @pubsub = pubsub.connect.pubsub
         service_containers.each { |service| register_container(service_container) }
+        subscribe_deregister
       end
     end
 
@@ -71,7 +78,7 @@ module Kiyohime
         if !store.keys.include?(channel)
           store.set(channel, true)
           puts "Registering service: #{channel}"
-          store.subscribe(channel) do |message|
+          pubsub.subscribe(channel) do |message|
             if service_container.service.respond_to?(method_name.to_sym)
               service_container.service.send(method_name.to_sym, message)
             end
@@ -88,19 +95,17 @@ module Kiyohime
     def deregister(service)
       channel = channel_parser.parse_type_to_channel_name(service.class)
       puts "Unsubscribing #{channel}"
-      store.unsubscribe(channel)
+      pubsub.unsubscribe(channel)
     end
-
-    private
 
     # Registers the deregister subscriber which uses the private function deregister to remove listeners
     def subscribe_deregister
       dereg_channel = channel_parser.parse_type_and_method_to_channel_name(self.class, :deregister)
       store.set(dereg_channel, true) unless store.keys.include?(dereg_channel)
       puts "Registering service: #{dereg_channel}"
-      store.subscribe(dereg_channel) do |message|
+      pubsub.subscribe(dereg_channel) do |message|
         puts "Unsubscribing #{message}"
-        store.unsubscribe(message)
+        pubsub.unsubscribe(message)
       end
     end
   end

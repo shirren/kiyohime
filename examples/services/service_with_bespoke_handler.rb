@@ -1,4 +1,5 @@
 module Services
+  # Example service with bespoke handlers
   class ServiceWithBespokeHandler
     def method1(message)
       puts "ServiceWithBespokeHandler Recived message #{message} on message1 receiver"

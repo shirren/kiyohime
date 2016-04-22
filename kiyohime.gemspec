@@ -29,6 +29,7 @@ Gem::Specification.new do |spec|
 
   # Add runtime depenencies here
   spec.add_runtime_dependency 'em-hiredis', '~> 0.3'
+  spec.add_runtime_dependency 'redis', '~> 3.3'
 
   # Add development dependencies here
   spec.add_development_dependency 'bundler', '~> 1.11'

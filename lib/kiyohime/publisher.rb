@@ -8,13 +8,8 @@ module Kiyohime
     attr_reader :store
 
     # Initialises the publisher by obtaining a Redis connection
-    def initialize
-      @store = Kiyohime::Stores::RedisStore.new.store
-    end
-
-    # The publisher can report a list of available subscriptions
-    def available_subscriptions
-      store.keys
+    def initialize(store = nil)
+      @store = store || Kiyohime::Stores::RedisStore.new.store
     end
 
     # A message can be published to a service/function, a message can be a simple type, or at

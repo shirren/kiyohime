@@ -9,6 +9,9 @@ class MockStore
     keys[channel] = value
   end
 
+  def publish(channel, message)
+  end
+
   def subscribe(channel)
     set(channel, true)
     yield if block_given?

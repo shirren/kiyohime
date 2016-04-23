@@ -2,16 +2,18 @@ require 'spec_helper'
 require 'kiyohime/containers/service_registration'
 require 'kiyohime/registry'
 require 'factories/registries'
+require 'mock_store'
+require 'mock_pub_sub'
 require 'services/another_service_with_generic_handler'
 require 'services/service_with_bespoke_handler'
 require 'services/service_with_generic_handler'
 require 'services/service_with_no_handler'
-require 'mock_store'
 
 describe Kiyohime::Registry do
   # EM::Hiredis.connect.pubsub
   let(:store)        { MockStore.new }
-  subject(:registry) { Kiyohime::Registry.new('test registry', store) }
+  let(:pubsub)       { MockPubSub.new(store) }
+  subject(:registry) { Kiyohime::Registry.new('test registry', store, pubsub) }
 
   it 'should not register a service with no generic handler' do
     service = Services::ServiceWithNoHandler.new

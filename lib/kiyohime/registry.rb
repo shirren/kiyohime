@@ -16,37 +16,31 @@ module Kiyohime
     # the process to continue and service publications via registered subscribers
     def register_async(*services)
       EM.run do
+        # Here we create a pub/sub connection within a given EventMachine scope
         @pubsub = pubsub.connect.pubsub
         services.each { |service| register(service) }
         subscribe_deregister
       end
     end
 
-    # Asynchronous registration of deregistration
-    def deregister_async
+    # Non blocking registration of services. The run block creates an event loop, this allows
+    # the process to continue and service publications via registered subscribers
+    def register_containers_async(*service_containers)
       EM.run do
         @pubsub = pubsub.connect.pubsub
-        deregister
+        service_containers.each { |service| register_container(service_container) }
+        subscribe_deregister
       end
     end
 
-    # A service should be able to register it's global interest in receiving all messages to a
-    # particular channel, this means, the object must define a generic handler named handle. Multiple
-    # services are registered in a single go using an evented publish subscribe approach
-    def register(service)
-      channel = channel_parser.parse_type_to_channel_name(service.class)
-      unless store.keys.include?(channel)
-        puts "Registering service: #{channel}"
-        if service.respond_to?(:handle)
-          pubsub.subscribe(channel) do |message|
-            # This approach uses a generic approach, so the service should implement
-            # a generic method named handle which takes a single argument
-            service.handle(message)
-          end
-          return true
-        end
+    # A registered service can be deregistered, but only using the same underlying
+    # pub/sub store
+    def deregister_async(service)
+      EM.run do
+        # Here we create a pub/sub connection within a given EventMachine scope
+        @pubsub = pubsub.connect.pubsub
+        deregister(service)
       end
-      false
     end
 
     # Tell's the caller if a particular generic service or service function is registered
@@ -59,14 +53,25 @@ module Kiyohime
       store.keys.include?(channel)
     end
 
-    # Non blocking registration of services. The run block creates an event loop, this allows
-    # the process to continue and service publications via registered subscribers
-    def register_containers_async(*service_containers)
-      EM.run do
-        @pubsub = pubsub.connect.pubsub
-        service_containers.each { |service| register_container(service_container) }
-        subscribe_deregister
+    # A service should be able to register it's global interest in receiving all messages to a
+    # particular channel, this means, the object must define a generic handler named handle. Multiple
+    # services are registered in a single go using an evented publish subscribe approach
+    def register(service)
+      channel = channel_parser.parse_type_to_channel_name(service.class)
+      unless store.keys.include?(channel)
+        if service.respond_to?(:handle)
+          byebug
+          puts "Registering service: #{channel}"
+          store.set(channel, true)
+          pubsub.subscribe(channel) do |message|
+            # This approach uses a generic approach, so the service should implement
+            # a generic method named handle which takes a single argument
+            service.handle(message)
+          end
+          return true
+        end
       end
+      false
     end
 
     # A service should be able to register it's global interest in receiving all messages to a

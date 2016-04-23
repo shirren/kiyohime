@@ -7,7 +7,7 @@ require 'simplecov'
 
 SimpleCov.start do
   add_filter '/examples/'
-  add_filter '/spec/services/'
+  add_filter '/spec/'
   add_filter '/bin/'
 end
 

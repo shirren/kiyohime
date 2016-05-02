@@ -33,10 +33,10 @@ Gem::Specification.new do |spec|
 
   # Add development dependencies here
   spec.add_development_dependency 'bundler', '~> 1.11'
-  spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'byebug', '~> 0'
   spec.add_development_dependency 'factory_girl', '~> 4.2'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop'
-  spec.add_development_dependency 'simplecov'
+  spec.add_development_dependency 'rubocop', '~> 0'
+  spec.add_development_dependency 'simplecov', '~> 0'
 end

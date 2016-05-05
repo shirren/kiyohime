@@ -47,9 +47,7 @@ describe Kiyohime::Registry do
     redis = Kiyohime::Stores::RedisStore.new
     registry = Kiyohime::Registry.new('Registry', redis.store)
     service1 = Services::ServiceWithGenericHandler.new
-    service2 = Services::ServiceWithGenericHandler.new
     expect(registry.register_async(service1)).to be_truthy
-    # publisher.publish('kiyohime.registry.register', service2)
   end
 
   skip 'should not deregister a service which is not registered' do

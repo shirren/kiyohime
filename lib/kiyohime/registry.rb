@@ -8,7 +8,8 @@ module Kiyohime
 
     # A registry should be provided with a name
     def initialize(name, pubsub)
-      @name, @pubsub = name, pubsub
+      @name = name
+      @pubsub = pubsub
       @channel_parser = Kiyohime::Parsers::ChannelParser.new
     end
 

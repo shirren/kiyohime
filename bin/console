@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require 'bundler/setup'
+require 'kiyohime/containers/service_registration'
 require 'kiyohime/publisher'
 require 'kiyohime/registry'
 require 'kiyohime/stores/redis_store'

@@ -1,5 +1,6 @@
 require 'kiyohime/version'
 require 'kiyohime/containers/service_registration'
+require 'kiyohime/exceptions/subscriber_error'
 require 'kiyohime/exceptions/unsupported_channel_name'
 require 'kiyohime/exceptions/unsupported_interface'
 require 'kiyohime/publisher'

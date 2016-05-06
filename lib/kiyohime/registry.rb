@@ -1,3 +1,4 @@
+require 'kiyohime/exceptions/subscriber_error'
 require 'kiyohime/parsers/channel_parser'
 
 module Kiyohime
@@ -54,7 +55,12 @@ module Kiyohime
         puts "Registering service: #{channel}"
         pubsub.subscribe(channel) do |message|
           if service_container.service.respond_to?(method_name.to_sym)
-            service_container.service.send(method_name.to_sym, message)
+            begin
+              service_container.service.send(method_name.to_sym, message)
+            rescue => e
+              puts "Kiyohime Error: #{e}"
+              raise Kiyohime::Exceptions::SubscriberError.new(e.message, channel, message)
+            end
           end
         end
       end

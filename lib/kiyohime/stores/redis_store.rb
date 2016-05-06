@@ -11,11 +11,11 @@ module Kiyohime
         @url = uri || ENV['REDIS_URL'] || ENV['REDISCLOUD_URL'] || 'redis://127.0.0.1:6379/0'
       end
 
-      def store
+      def redis
         Redis.new(url: url)
       end
 
-      def pubsub
+      def hiredis
         EM::Hiredis.connect(url).pubsub
       end
     end

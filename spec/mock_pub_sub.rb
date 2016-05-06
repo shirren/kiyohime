@@ -9,7 +9,7 @@ class MockPubSub
     self
   end
 
-  def pubsub
+  def hiredis
     self
   end
 

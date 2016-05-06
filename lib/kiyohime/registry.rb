@@ -5,12 +5,14 @@ module Kiyohime
   # A registry is a listing of services/functions which are accessible via a publish/subscribe paradigm. This
   # services/functions are accessible through the Publisher
   class Registry
-    attr_reader :name, :channel_parser, :pubsub
+    attr_reader :name, :channel_parser, :store, :hiredis
 
-    # A registry should be provided with a name
-    def initialize(name, pubsub)
+    # A registry should be provided with a name, and an underlying store. If the hiredis flag
+    # is set to true we use the hiredis wrapper around redis instead
+    def initialize(name, store, hiredis = true)
       @name = name
-      @pubsub = pubsub
+      @store = store
+      @hiredis = hiredis
       @channel_parser = Kiyohime::Parsers::ChannelParser.new
     end
 
@@ -37,10 +39,11 @@ module Kiyohime
     # particular channel, this means, the object must define a generic handler named handle. Multiple
     # services are registered in a single go using an evented publish subscribe approach
     def register(service)
+      initialise_registry
       channel = channel_parser.parse_type_to_channel_name(service.class)
       if service.respond_to?(:handle)
         puts "Registering service: #{channel}"
-        pubsub.subscribe(channel) do |message|
+        store.subscribe(channel) do |message|
           service.handle(message)
         end
       end
@@ -50,10 +53,11 @@ module Kiyohime
     # channel name derived using the service name and method name. This unlike the generic register
     # method which assumes the service implements a particular interface
     def register_container(service_container)
+      initialise_registry
       service_container.methods.each do |method_name|
         channel = channel_parser.parse_type_and_method_to_channel_name(service_container.service.class, method_name.to_sym)
         puts "Registering service: #{channel}"
-        pubsub.subscribe(channel) do |message|
+        store.subscribe(channel) do |message|
           if service_container.service.respond_to?(method_name.to_sym)
             begin
               service_container.service.send(method_name.to_sym, message)
@@ -73,15 +77,19 @@ module Kiyohime
     def subscribe_deregister
       dereg_channel = channel_parser.parse_type_and_method_to_channel_name(self.class, :deregister)
       puts "Registering service: #{dereg_channel}"
-      pubsub.subscribe(dereg_channel) do |message|
+      store.subscribe(dereg_channel) do |message|
         puts "Unsubscribing from channel #{message}"
-        pubsub.unsubscribe(message)
+        store.unsubscribe(message)
       end
     end
 
     # Initialisation of the registry within the scope of an EventMachine block
     def initialise_registry
-      @pubsub = pubsub.connect.pubsub
+      if hiredis
+        @store = store.hiredis
+      else
+        @store = store.redis
+      end
       subscribe_deregister
     end
   end

@@ -23,12 +23,13 @@ describe Kiyohime::Registry do
 
   it 'should not register a service with no generic handler' do
     service = Services::ServiceWithNoHandler.new
-    expect(registry.register(service)).to be_falsey
+    expect(registry.send(:register, service)).to be_falsey
   end
 
   it 'should register a single service with a generic handler' do
     service = Services::ServiceWithGenericHandler.new
-    expect(registry.register(service)).to be_truthy
+    registry.send(:initialise_registry)
+    expect(registry.send(:register, service)).to be_truthy
   end
 
   skip 'should track a service when it is registered' do
@@ -39,8 +40,9 @@ describe Kiyohime::Registry do
 
   it 'should allow the same service to be registered twice' do
     service = Services::ServiceWithGenericHandler.new
-    expect(registry.register(service)).to be_truthy
-    expect(registry.register(service)).to be_truthy
+    registry.send(:initialise_registry)
+    expect(registry.send(:register, service)).to be_truthy
+    expect(registry.send(:register, service)).to be_truthy
   end
 
   skip 'should allow secondary generic services to be registered' do
@@ -63,8 +65,9 @@ describe Kiyohime::Registry do
 
   it 'should register services with bespoke handler' do
     service = Services::ServiceWithGenericHandler.new
+    registry.send(:initialise_registry)
     service_registration = Kiyohime::Containers::ServiceRegistration.new(service, :method1, :method2)
-    expect(registry.register_container(service_registration)).to be_truthy
+    expect(registry.send(:register_container, service_registration)).to be_truthy
   end
 
   skip 'should track the registration of services with bespoke handlers' do

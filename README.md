@@ -37,8 +37,8 @@ To register this service and it's method as a subscriber we first need to create
 ```ruby
 service = MySubscriber.new
 store = Kiyohime::Stores::RedisStore.new
-registry = Kiyohime::Registry.new('My Registry', store.pubsub)
-registry.register_async(service)
+registry = Kiyohime::Registry.new('My Registry', store)
+registry.register_services(service)
 ```
 
 Runnin the code above should print the following statements to the console;
@@ -83,10 +83,10 @@ end
 
 ```ruby
 my_complex_service = MyComplexSubscriber.new
-service_container = Kiyhome::Containers::ServiceRegistration.new(my_complex_service, :method1, :method2)
+service_container = Kiyohime::Containers::ServiceRegistration.new(my_complex_service, :method1, :method2)
 store = Kiyohime::Stores::RedisStore.new
-registry = Kiyohime::Registry.new('My Registry', store.pubsub)
-registry.register_containers_async(service_container)
+registry = Kiyohime::Registry.new('My Registry', store)
+registry.register_containers(service_container)
 ```
 
 Running the code above should print the following to your console;
@@ -105,11 +105,11 @@ The methods `register_async` and `register_containers_async` can also take an ar
 
 ```ruby
 service = MySubscriber.new
-service_container1 = Kiyhome::Containers::ServiceRegistration.new(service, :handle)
+service_container1 = Kiyohime::Containers::ServiceRegistration.new(service, :handle)
 my_complex_service = MyComplexSubscriber.new
-service_container2 = Kiyhome::Containers::ServiceRegistration.new(my_complex_service, :method1, :method2)
+service_container2 = Kiyohime::Containers::ServiceRegistration.new(my_complex_service, :method1, :method2)
 store = Kiyohime::Stores::RedisStore.new
-registry = Kiyohime::Registry.new('My Registry', store.pubsub)
+registry = Kiyohime::Registry.new('My Registry', store)
 registry.register_containers_async(service_container1, service_container2)
 ```
 

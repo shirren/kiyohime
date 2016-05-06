@@ -32,7 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'redis', '~> 3.3'
 
   # Add development dependencies here
-  spec.add_development_dependency 'bundler', '~> 1.11'
   spec.add_development_dependency 'byebug', '~> 8.2'
   spec.add_development_dependency 'factory_girl', '~> 4.2'
   spec.add_development_dependency 'rake', '~> 10.0'

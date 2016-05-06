@@ -9,7 +9,7 @@ module Kiyohime
 
     # Initialises the publisher by obtaining a Redis connection
     def initialize(store = nil)
-      @store = store || Kiyohime::Stores::RedisStore.new.store
+      @store = store || Kiyohime::Stores::RedisStore.new.redis
     end
 
     # A message can be published to a service/function, a message can be a simple type, or at

@@ -4,6 +4,7 @@ require 'kiyohime/exceptions/subscriber_error'
 require 'kiyohime/exceptions/unsupported_channel_name'
 require 'kiyohime/exceptions/unsupported_interface'
 require 'kiyohime/publisher'
+require 'kiyohime/publisher_helper'
 require 'kiyohime/registry'
 require 'kiyohime/stores/redis_store'
 

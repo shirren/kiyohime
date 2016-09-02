@@ -45,7 +45,11 @@ module Kiyohime
       if service.respond_to?(:handle)
         puts "Registering service: #{channel}"
         pubsub.subscribe(channel) do |message|
-          service.handle(message)
+          begin
+            service.handle(message)
+          rescue => e
+            puts "Kiyohime Error: #{e}"
+          end
         end
       end
     end
@@ -63,7 +67,6 @@ module Kiyohime
               service_container.service.send(method_name.to_sym, message)
             rescue => e
               puts "Kiyohime Error: #{e}"
-              raise Kiyohime::Exceptions::SubscriberError.new(e.message, channel, message)
             end
           end
         end

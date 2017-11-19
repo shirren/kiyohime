@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'kiyohime/version'
 require 'kiyohime/containers/service_registration'
 require 'kiyohime/exceptions/subscriber_error'

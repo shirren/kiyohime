@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'kiyohime/exceptions/subscriber_error'
 require 'kiyohime/parsers/channel_parser'
 

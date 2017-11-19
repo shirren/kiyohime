@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'redis'
 require 'kiyohime/stores/redis_store'
 require 'kiyohime/publisher'

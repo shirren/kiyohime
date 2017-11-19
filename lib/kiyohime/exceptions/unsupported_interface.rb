@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Kiyohime
   module Exceptions
     # This error is used to signal a service without a generic handler

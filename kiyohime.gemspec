@@ -1,4 +1,6 @@
 # coding: utf-8
+# frozen_string_literal: true
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'kiyohime/version'
@@ -32,6 +34,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'factory_girl', '~> 4.2'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 0.39'
+  spec.add_development_dependency 'rubocop', '~> 0.51'
   spec.add_development_dependency 'simplecov', '~> 0.11'
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Services
   # Example service which generic handler
   class ServiceWithGenericHandler

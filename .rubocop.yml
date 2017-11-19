@@ -2,11 +2,11 @@ ClassLength:
   Max: 120
 
 LineLength:
-  Max: 200
+  Max: 130
 
 MethodLength:
   CountComments: false  # count full line comments?
-  Max: 15
+  Max: 10
 
 Metrics/AbcSize:
   Max: 30
@@ -18,10 +18,17 @@ Encoding:
 Style/GuardClause:
   Enabled: false
 
+Style/DateTime:
+  Enabled: false
+
 Lint/UnusedBlockArgument:
   Enabled: false
 
+Lint/SafeNavigationChain:
+  Enabled: false
+
 AllCops:
+  TargetRubyVersion: 2.4
   Exclude:
     - bin/**/*
     - db/**/*
@@ -29,6 +36,5 @@ AllCops:
     - Rakefile
     - script/**/*
     - spec/factories/**/*
-    - spec/test_app/**/*
-    - node_modules/**/*
+    - spec/**/*
     - !ruby/regexp /old_and_unused\.rb$/

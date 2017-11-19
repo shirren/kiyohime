@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'kiyohime/exceptions/unsupported_channel_name'
 
 module Kiyohime

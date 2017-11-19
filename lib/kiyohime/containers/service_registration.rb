@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Kiyohime
   module Containers
     # Services can be registered via this container. It is principally used for services
